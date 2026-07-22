@@ -1,0 +1,48 @@
+name: pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build
+        env:
+          CI: "false"
+        run: |
+          set -e
+          OUT=""
+          if [ -f package.json ] && grep -q '"build"' package.json; then
+            npm install --no-audit --no-fund
+            npm run build
+            for d in dist build out; do
+              if [ -f "$d/index.html" ]; then OUT="$d"; break; fi
+            done
+          fi
+          if [ -z "$OUT" ]; then
+            if [ -f index.html ]; then OUT="."
+            elif [ -f public/index.html ]; then OUT="public"
+            else echo "nessun index.html trovato"; exit 1; fi
+          fi
+          mkdir -p /tmp/site
+          rsync -a --exclude .git --exclude .github --exclude node_modules "$OUT"/ /tmp/site/
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: /tmp/site
+      - id: deployment
+        uses: actions/deploy-pages@v4
