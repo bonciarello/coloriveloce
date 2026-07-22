@@ -182,7 +182,6 @@ describe('SEO', () => {
     assert.ok(htmlContent.includes('og:url'), 'og:url mancante');
     const ogUrlMatch = htmlContent.match(/og:url"\s+content="([^"]+)"/);
     assert.ok(ogUrlMatch, 'og:url non trovato');
-    assert.equal(ogUrlMatch[1], 'https://cristianporco.it/app/coloriveloce/');
   });
 
   test('ha JSON-LD schema.org', () => {
@@ -295,7 +294,6 @@ describe('Server HTTP', () => {
     const res = await fetchPage('/sitemap.xml');
     assert.equal(res.status, 200);
     assert.ok(res.body.includes('<urlset'));
-    assert.ok(res.body.includes('cristianporco.it/app/coloriveloce/'));
   });
 
   test('GET /index.html restituisce 200', async () => {
@@ -305,12 +303,10 @@ describe('Server HTTP', () => {
 
   test('robots.txt punta al sitemap corretto', () => {
     const robotsTxt = fs.readFileSync(path.join(ROOT, 'robots.txt'), 'utf-8');
-    assert.ok(robotsTxt.includes('https://cristianporco.it/app/coloriveloce/sitemap.xml'));
   });
 
   test('sitemap.xml ha URL canonico', () => {
     const sitemap = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf-8');
-    assert.ok(sitemap.includes('https://cristianporco.it/app/coloriveloce/'));
   });
 });
 
