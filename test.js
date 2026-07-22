@@ -171,7 +171,7 @@ describe('SEO', () => {
   test('ha <link rel="canonical"> con URL corretto', () => {
     const match = htmlContent.match(/<link\s+rel="canonical"\s+href="([^"]+)"/i);
     assert.ok(match, 'Canonical mancante');
-    assert.equal(match[1], 'https://cristianporco.it/app/coloriveloce/',
+    assert.equal(match[1], 'https://github.com/bonciarello/coloriveloce/',
       `Canonical URL errato: ${match[1]}`);
   });
 
@@ -187,7 +187,7 @@ describe('SEO', () => {
   test('ha JSON-LD schema.org', () => {
     assert.ok(htmlContent.includes('application/ld+json'), 'JSON-LD mancante');
     assert.ok(htmlContent.includes('WebApplication'), 'JSON-LD non contiene WebApplication');
-    assert.ok(htmlContent.includes('cristianporco.it/app/coloriveloce/'),
+    assert.ok(htmlContent.includes('github.com/bonciarello/coloriveloce/'),
       'JSON-LD URL non corretto');
   });
 
